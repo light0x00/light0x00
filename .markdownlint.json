@@ -4,5 +4,6 @@
 	"ol-prefix": false,
 	"no-inline-html": false,
 	"line-length": false,
-	"single-h1": false
+	"single-h1": false,
+	"no-space-in-code": false
 }

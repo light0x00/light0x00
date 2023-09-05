@@ -1,0 +1,315 @@
+@startuml subtraction-expression-ast-left-reduce
+hide empty description
+title 左结合的减法表达式,对输入 a-b-c-d 生成的语法树
+state 0 as "第三次减法运算"
+state 1 as "第二次减法运算"
+state 2 as "第一次减法运算"
+state 3 as "a"
+state 4 as "-"
+state 5 as "b"
+state 6 as "-"
+state 7 as "c"
+state 8 as "-"
+state 9 as "d"
+
+1 -down-> 2
+2 -down-> 3
+2 -down-> 4
+2 -down-> 5
+1 -down-> 6
+1 -down-> 7
+0 -down-> 1
+0 -down-> 8
+0 -down-> 9
+@enduml
+
+@startuml subtraction-expression-ast-right-reduce
+hide empty description
+title 右结合的减法表达式,对输入 a-b-c-d 生成的语法树
+state 0 as "第三次减法运算"
+state 3 as "a"
+state 4 as "-"
+state 1 as "第二次减法运算"
+state 5 as "b"
+state 6 as "-"
+state 2 as "第一次减法运算"
+state 7 as "c"
+state 8 as "-"
+state 9 as "d"
+
+0 -down-> 3
+0 -down-> 4
+0 -down-> 1
+1 -down-> 5
+1 -down-> 6
+1 -down-> 2
+2 -down-> 7
+2 -down-> 8
+2 -down-> 9
+@enduml
+
+
+@startuml algorithm-expression-ast-right-reduce
+hide empty description
+title 右递归文法,对 1 * 2 + 3 的分析结果
+
+state 1 as "E"
+state 2 as "1"
+state 3 as "*"
+state 4 as "E"
+
+state 5 as "2"
+state 6 as "+"
+state 7 as "E"
+state 8 as "3"
+
+1-down->2
+1-down->3
+1-down->4
+4-down->5
+4-down->6
+4-down->7
+7-down->8
+@enduml
+
+
+@startuml algorithm-expression-ast-left-reduce
+hide empty description
+title 调整文法为左递归后,对 1 * 2 + 3 的分析结果
+
+state 1 as "E"
+state 2 as "E"
+state 3 as "+"
+state 4 as "3"
+
+state 5 as "1"
+state 6 as "*"
+state 7 as "E"
+state 8 as "2"
+
+1-down->2
+1-down->3
+1-down->4
+2-down->5
+2-down->6
+2-down->7
+
+7-down->8
+@enduml
+
+
+@startuml algorithm-expression-ast-left-reduce-2
+hide empty description
+title 左递归文法,对 3 + 1 * 2 的分析结果
+
+state 1 as "E"
+state 2 as "E"
+state 3 as "*"
+state 4 as "2"
+
+state 5 as "3"
+state 6 as "+"
+state 7 as "E"
+state 8 as "1"
+
+1-down->2
+1-down->3
+1-down->4
+2-down->5
+2-down->6
+2-down->7
+
+7-down->8
+@enduml
+
+@startuml algorithm-expression-automata
+
+[*] --> State1
+state State1 {
+	State1: E -> ·E+E	 {EOF}
+	State1: E -> ·E*E  {EOF}
+	State1: E -> ·digit  {EOF}
+
+	State1: E -> ·E+E	 {+}
+	State1: E -> ·E*E  {+}
+	State1: E -> ·digit  {+}
+
+	State1: E -> ·E+E	 {*}
+	State1: E -> ·E*E  {*}
+	State1: E -> ·digit  {*}
+}
+
+state State2 {
+	State2: E -> digit·  {EOF}
+	State2: E -> digit·  {+}
+	State2: E -> digit·  {*}
+}
+
+State1 -right-> State2 : lookahead=1 Goto
+State2 -left-> State1 : Reudce E
+State1 -down-> State3 : Shift E
+State3 -right-> State4 : Shift +
+State4 -right-> State5 : lookahead=2 Goto State5
+State5 -left-> State4 : Reduce E
+State4 -left-> State6 : Shift E
+
+state State3 {
+	State3: E -> E·+E	 {EOF}
+	State3: E -> E·*E  {EOF}
+
+	State3: E -> E·+E	 {+}
+	State3: E -> E·*E  {+}
+
+	State3: E -> E·+E	 {*}
+	State3: E -> E·*E  {*}
+}
+
+state State4 {
+	State4: E -> E+·E	 {EOF}
+	State4: E -> E+·E	 {+}
+	State4: E -> E+·E	 {*}
+
+	State4: E -> ·E+E	 {EOF}
+	State4: E -> ·E*E	 {EOF}
+	State4: E -> ·digit	 {EOF}
+
+	State4: E -> ·E+E	 {+}
+	State4: E -> ·E*E	 {+}
+	State4: E -> ·digit	 {+}
+
+	State4: E -> ·E+E	 {*}
+	State4: E -> ·E*E	 {*}
+	State4: E -> ·digit	 {*}
+}
+
+state State5 {
+	State5: E -> digit·	 {EOF}
+	State5: E -> digit·	 {+}
+	State5: E -> digit·	 {*}
+}
+
+state State6 {
+	State6: E -> E+E·	 {EOF}
+	State6: E -> E+E·	 {+}
+	State6: E -> E+E·	 {*} 
+
+	State6: E -> E·+E	 {EOF}
+	State6: E -> E·*E	 {EOF}
+
+	State6: E -> E·+E	 {+}
+	State6: E -> E·*E	 {+}
+
+	State6: E -> E·+E	 {*}
+	State6: E -> E·*E	 {*}
+}
+
+state State7 {
+	State7: E -> E*·E	 {EOF}
+	State7: E -> E*·E	 {+}
+	State7: E -> E*·E	 {*}
+
+	State7: E -> ·E*E	 {EOF}
+	State7: E -> ·E+E	 {EOF}
+	State7: E -> ·digit	{EOF}
+
+	State7: E -> ·E*E	 {+}
+	State7: E -> ·E+E	 {+}
+	State7: E -> ·digit	{+}
+
+	State7: E -> ·E*E	 {*}
+	State7: E -> ·E+E	 {*}
+	State7: E -> ·digit	{*}
+}
+
+state fork_state <<fork>>
+
+State6 -up-> fork_state : lookahead=*
+fork_state -down-> State7 : Shift *
+fork_state -up-> State4 : Reduce E
+
+note right of State6
+状态中的以下产生式对输入符号“*”存在移入规约冲突:
+E -> E+E·	 {*} 
+E -> E·*E	 {EOF}
+E -> E·*E	 {+}
+E -> E·*E	 {*}
+end note
+@enduml
+
+@startuml if-shift-reduce-conflict-automata
+state State1 as "存在移入规约的状态"
+State1: 'if' CONDITION BLOCK · 'else' BLOCK {EOF}
+State1: 'if' CONDITION BLOCK · {'else'}
+@enduml
+
+@startuml if-shift-reduce-conflict-reudce-ast
+title lookahead为else时,选择归约生成的语法树
+
+hide empty description
+state b1 as "IF"
+state b2 as "if"
+state b3 as "CONDITION"
+state b4 as "BLOCK" 
+state b5 as "IF"
+state b6 as "if"
+state b7 as "CONDITION"
+state b8 as "BLOCK"
+state b9 as "STATEMENT"
+state b10 as "else"
+state b11 as "BLOCK"
+state b12 as "STATEMENT"
+
+b1-down->b2
+b1-down->b3
+b1-down->b4
+b4-down->b5
+b5-down->b6
+b5-down->b7
+b5-down->b8
+b8--down->b9
+b1-down->b10
+b1-down->b11
+b11-down->b12
+
+note bottom of b10
+❌
+else 与外层 IF 结合,
+破坏了 else 就近原则
+end note
+@enduml
+
+@startuml if-shift-reduce-conflict-shift-ast
+title lookahead为else时,选择移入else生成的语法树
+
+hide empty description
+state 1 as "IF"
+state 2 as "if"
+state 3 as "CONDITION"
+state 4 as "BLOCK" 
+state 5 as "IF"
+state 6 as "if"
+state 7 as "CONDITION"
+state 8 as "BLOCK"
+state 9 as "STATEMENT"
+state 10 as "else"
+state 11 as "BLOCK"
+state 12 as "STATEMENT"
+
+1-down->2
+1-down->3
+1-down->4
+4-down->5
+5-down->6
+5-down->7
+5-down->8
+8--down->9
+5-down->10
+5-down->11
+11-down->12
+
+note bottom of 10
+✅
+else 与内层 IF 结合
+符合预期
+end note
+@enduml
