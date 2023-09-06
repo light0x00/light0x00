@@ -16,3 +16,5 @@ They have no idea where their culture came from.
 - [编译原理-语法分析中的优先级与结合方向问题](./thinking-in-tech/compiler-syntactic-analysis-reduce-direction-and-priority/index.md)
 
 - [分析12306座位分配算法](./thinking-in-tech/12306-seat-allocating-algorithm.md)
+
+- [如何设计一个网络框架](./thinking-in-tech/deep-dive-into-lighty/index.md)

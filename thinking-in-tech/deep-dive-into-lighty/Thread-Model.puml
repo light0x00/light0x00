@@ -1,0 +1,24 @@
+@startuml Thread-Model
+participant 0 as "Reactor"
+
+box "Pipeline" #LightBlue
+participant 1 as "Handler1"
+participant 2 as "Handler2"
+participant 3 as "..."
+participant 4 as "HandlerN-1"
+participant 5 as "HandlerN"
+end box
+
+[--> 0: event triggered
+0-->1: 
+1-->2: 
+2-->3: 
+3-->4
+4-->5
+5-->4
+4-->3
+3-->2
+2-->1
+1-->0
+
+@enduml
