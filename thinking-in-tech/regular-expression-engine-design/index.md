@@ -4,6 +4,6 @@
 
 - [语法分析](./syntactic/index.md)
 
-- [语意分析](./semantic/index.md)
+- [语义分析](./semantic/index.md)
 
 - [NFA-to-DFA](./nfa-2-dfa/index.md)

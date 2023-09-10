@@ -10,18 +10,9 @@
 
 ![](./nfa_2_dfa_aab.svg)
 
-在起点处,输入a可能的后继状态是 1、2, 那么就把1、2合为一个状态 A = $\begin{Bmatrix} 1,2 \end{Bmatrix}$
+在起点处,输入a可能的后继状态是 1、2, 那么就把1、2合为一个状态 A = $`\begin{Bmatrix} 1,2 \end{Bmatrix}`$
 
 ![](./nfa_2_dfa_step1.svg)
-
-```plantuml
-@startuml nfa_2_dfa_step1
-[*]->A : a
-
-State A
-A: 1,2 
-@enduml
-```
 
 大状态 A 里, 状态 1、2 存在转换为 $`\begin{Bmatrix}
 1 \xrightarrow{a} 1 \\
@@ -37,7 +28,7 @@ A \xrightarrow{b} 3
 
 ![](./nfa_2_dfa_step2.svg)
 
-大状态 B 里,状态 3 存在转换 $`\begin{Bmatrix} 3 \xrightarrow{EOF} Accept \end{Bmatrix} `$ , 得到 DFA 转换:  $`B \xrightarrow{EOF} Accept`$
+大状态 B 里,状态 3 存在转换 $`\begin{Bmatrix} 3 \xrightarrow{EOF} Accept \end{Bmatrix} `$ , 得到 DFA 转换:  $B \xrightarrow{EOF} Accept$
 
 ![](./nfa_2_dfa_step3.svg)
 
@@ -45,12 +36,13 @@ A \xrightarrow{b} 3
 
 从表达的语义来看,DFA 与 NFA 并没有差别,如上例的 NFA 的转换:
 
-$`start \xrightarrow{a} 1`$
-$`start \xrightarrow{a} 2`$
+$$start \xrightarrow{a} 1$$
+
+$$start \xrightarrow{a} 2$$
 
 其对应的 DFA 转换:
 
-$`start \xrightarrow{a} \{1,2\}`$
+$$start \xrightarrow{a} \{1,2\}$$
 
 事实上, 两者都表达了 "起点处输入a可能到达1或2". 但是在表达形式上, NFA 将这种二义性(或者说多种可能性)表现在**转换**上了; 而与之不同, DFA 将二义性表达在**状态**里, 多种可能性被聚合在状态里, 消除了转换的二义性.
 
@@ -81,47 +73,57 @@ gantt
 
 上例中, 起点处存在如下 4 个转换:
 
-$`\begin{Bmatrix}
+$$
+\begin{Bmatrix}
 	[1] start\xrightarrow{b}1 \\
 	[2] start\xrightarrow{b-d}2 \\
 	[3] start\xrightarrow{c-h}3 \\
 	[4] start\xrightarrow{Any}4 \\
-\end{Bmatrix}`$
+\end{Bmatrix}
+$$
 
 我们把每个转换的输入区间看作一个集合, 对转换 1 与转换 2 输入区间作集合运算:
 
-$`\begin{Bmatrix}
+$$
+\begin{Bmatrix}
 转换1 - 转换2 = \{\} \\
 转换2 - 转换1 = \{c \sim d\} \\
 转换1 ∩ 转换2 = \{b\}
-\end{Bmatrix}`$
+\end{Bmatrix}
+$$
 
 根据运算结果, 交集为 {b}, 所以 $start\xrightarrow{b}\{1,2\}$, 转换2的差集为 {c~d}, 所以 $start\xrightarrow{c-d}2$
 
 合在一起, 于是得到了如下转换:
 
-$`\begin{Bmatrix}
+$$
+\begin{Bmatrix}
 start\xrightarrow{b}\{1,2\} \\
 start\xrightarrow{c-d}2
-\end{Bmatrix}`$
+\end{Bmatrix}
+$$
 
 下一步, 将转换 3 与上面两个一一作集合运算, 重复相同的处理逻辑, 得到:
 
-$`\begin{Bmatrix}
+$$
+\begin{Bmatrix}
 start\xrightarrow{b}\{1,2\} \\
 start\xrightarrow{c-d}\{2,3\} \\
 start\xrightarrow{e-h}3 \\
-\end{Bmatrix}`$
+\end{Bmatrix}
+$$
 
 最后, 对转换4 与以上3个转换一一作集合运算, 得到:
 
-$`\begin{Bmatrix}
+$$
+\begin{Bmatrix}
 	start\xrightarrow{b}\{1,2,4\} \\
 	start\xrightarrow{c-d}\{2,3,4\} \\
 	start\xrightarrow{c-h}\{3,4\} \\
 	start\xrightarrow{∞-a}4 \\
 	start\xrightarrow{i-∞}4 \\
-\end{Bmatrix}`$
+\end{Bmatrix}
+$$
 
 至此, 便消除了转换的二义性问题, 得到如下 DFA :
 
