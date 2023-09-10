@@ -1,0 +1,157 @@
+@startuml ast_ababb
+hide empty description
+title AST of (a|b)*abb$
+state 0 as "RegExpr"
+0: (((((a|b)*)a)b)b)
+state 1 as "AndExpr"
+1: (((((a|b)*)a)b)b)
+state 2 as "AndExpr"
+2: ((((a|b)*)a)b)
+state 3 as "AndExpr"
+3: (((a|b)*)a)
+state 4 as "UnaryExpr"
+4: ((a|b)*)
+state 5 as "OrExpr"
+5: (a|b)
+state 6 as "<1>SingleToken" #text:red 
+6: a 
+state 7 as "<2>SingleToken" #text:red 
+7: b
+state 8 as "<3>SingleToken" #text:red 
+8: a
+state 9 as "<4>SingleToken" #text:red 
+9: b
+state 10 as "<5>SingleToken" #text:red 
+10: b
+state 11 as "Accept"
+11:
+5-down->6
+5-down->7
+4-down->5
+3-down->4
+3-down->8
+2-down->3
+2-down->9
+1-down->2
+1-down->10
+0-down->1
+0-down->11
+@enduml
+
+@startuml ast_to_nfa_ababb_step1
+hide empty description
+[*]-down->3 : a
+[*]-down->2 : b
+[*]-down->1 : a
+@enduml
+
+@startuml ast_to_nfa_ababb_step2
+hide empty description
+[*]-down->3 : a
+[*]-down->2 : b
+[*]-down->1 : a
+1-down->1 : a
+1-down->2 : b
+1-down->3 : a
+2-down->1 : a
+2-down->2 : b
+2-down->3 : a
+3-down->4 : b
+@enduml
+
+
+@startuml class-diagram-interpreter
+title: 基于解释器模式的语义分析
+interface AST {
+  AST[] children
+  void resolveFirstSet()
+  void resolveFollowSet()
+	NFA generateNFA()
+}
+
+AST<|--AndExpr
+
+class AndExpr {
+	left : AST
+	right : AST
+
+	void resolveFirstSet()
+  void resolveFollowSet()
+	NFA generateNFA()
+}
+
+AST<|--OrExpr
+class OrExpr {
+	left : AST
+	right : AST
+
+	void resolveFirstSet()
+  void resolveFollowSet()
+	NFA generateNFA()
+}
+
+AST<|-- UnaryExpr
+
+class UnaryExpr {
+	expr : AST
+	operator : Token
+
+	void resolveFirstSet()
+  void resolveFollowSet()
+	NFA generateNFA()
+}
+
+AST<|-- Token
+class Token{
+	lexme : String
+
+	void resolveFirstSet()
+  void resolveFollowSet()
+	NFA generateNFA()
+}
+@enduml
+
+
+@startuml class-diagram-visitor
+title: 基于访客模式的语义分析
+interface AST {
+  AST[] children
+}
+
+AST<|--AndExpr
+
+class AndExpr {
+	left : AST
+	right : AST
+}
+
+AST<|--OrExpr
+class OrExpr {
+	left : AST
+	right : AST
+}
+
+AST<|-- UnaryExpr
+
+class UnaryExpr {
+	expr : AST
+	operator : Token
+}
+
+AST<|-- Token
+class Token{
+	lexme : String
+}
+
+interface FirstSetVisitor{
+	visit(ast :AST)
+}
+
+interface FollowSetVisitor{
+	visit(ast :AST)
+}
+
+interface NFAGenerator{
+	visit(ast :AST)
+}
+@enduml

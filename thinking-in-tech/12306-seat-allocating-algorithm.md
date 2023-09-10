@@ -9,7 +9,7 @@
 我们将以如下线路作为例子展开.
 
 ```mermaid
-%%{init: {  'theme': 'base', 'gitGraph': {'mainBranchName': '西安-上海线路'}} }%%
+%%{init: {  'theme': 'base', 'gitGraph': {'mainBranchName': '西安→上海线路'}} }%%
 
 gitGraph LR:
 commit id: "西安(1)"

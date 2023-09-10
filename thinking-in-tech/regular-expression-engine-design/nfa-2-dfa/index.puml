@@ -1,0 +1,69 @@
+@startuml nfa_2_dfa_aab
+[*]->1 : a
+State 1
+1: a*
+State 2
+2: a
+
+[*]->2 : a
+
+1->1 : a
+1->2 : a
+
+State 3
+3:b
+2->3 : b
+
+3->[*] : Accept
+@enduml
+
+@startuml nfa_2_dfa_step1
+[*]->A : a
+
+State A
+A: 1,2 
+@enduml
+
+
+@startuml nfa_2_dfa_range_ambiguity
+
+title 存在范围转换二义性的NFA
+hide empty description
+state 1
+state 2
+state 3
+state 4
+state 5
+[*]-down->1 : b
+[*]-down->2 : (b-d)
+[*]-down->3 : (c-h)
+[*]-down->4 : Any
+1-down->5 : z
+2-down->5 : z
+3-down->5 : z
+4-down->5 : z
+5-down->[*] : Any
+
+@enduml
+
+
+@startuml nfa_2_dfa_range_ambiguity_eliminate
+title 消除范围转换二义性后的 DFA
+hide empty description
+state 6: Accept
+state 4: 4
+state 5: 5
+state 1: 1,2,4
+state 3: 3,4
+state 2: 2,3,4
+[*]-down-> 1 : b 
+[*]-down-> 2 : (c-d) 
+[*]-down-> 3 : (e-h) 
+[*]-down-> 4 : (∞-a) 
+[*]-down-> 4 : (i-∞) 
+4-down-> 5 : z 
+5-down-> 6 : Any 
+3-down-> 5 : z 
+1-down-> 5 : z 
+2-down-> 5 : z 
+@enduml

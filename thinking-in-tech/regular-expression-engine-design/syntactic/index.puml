@@ -1,0 +1,36 @@
+@startuml priority-error-ast
+hide empty description
+title ❌错误示例: 未区分 And 与 Or 优先级的文法
+
+state 1 as "a"
+state 2 as "And"
+state 3 as "b"
+
+2-->1
+2-->3
+
+state 4 as "c"
+state 5 as "Or"
+
+5-->2
+5-->4
+@enduml
+
+@startuml priority-right-ast
+hide empty description
+title ✅正确示例: 区分 And 与 Or 优先级的文法
+
+state 1 as "a"
+state 2 as "And"
+state 3 as "Or"
+
+2-->1
+2-->3
+
+state 4 as "b"
+state 5 as "c"
+
+3-->4
+3-->5
+@enduml
+
