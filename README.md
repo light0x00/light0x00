@@ -20,3 +20,5 @@ They have no idea where their culture came from.
 - [如何设计一个网络框架](./thinking-in-tech/deep-dive-into-lighty/index.md)
 
 - [正则引擎设计与实现](./thinking-in-tech/regular-expression-engine-design/index.md)
+
+- [InnoDB 顺序插入与乱序插入的区别](./thinking-in-tech/innodb-data-insert-order-effect/index.md)
